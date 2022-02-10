@@ -69,20 +69,21 @@ app.get('/quotes', (req, res) => {
 
 app.get('/quotes/:id', (req, res) => {
     const id = Number(req.params.id);
-    const match = quotes.find(quote => quote.id === id);
+    const match = quotes.find((quote) => quote.id === id);
     if (match) {
-        res.send(quotes)
+        res.send(match);
     } else {
-        res.status(404).send({ error: 'Quote not found.' });
+        res.status(404).send({ error: 'quote not found.' });
     }
 });
 
 
+
 app.get('/quotes/:author', (req, res) => {
-    const author = req.params.author;
-    const match = quotes.find(quote => quote.author === author);
+    const author = Number(req.params.author);
+    const match = quotes.find((quote) => quote.id === author);
     if (match) {
-        res.send(quotes)
+        res.send(match);
     } else {
         res.status(404).send({ error: 'author not found.' });
     }
