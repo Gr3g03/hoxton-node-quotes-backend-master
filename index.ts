@@ -6,16 +6,16 @@ const PORT = 4000;
 
 
 type Quotes = {
-    id: number
-    quote: string
-    author: string
+    id: number;
+    quote: string;
+    author: string;
 }
 
 
 const quotes: Quotes[] = [
     {
         id: 1,
-        quote: 'Many of life’s failures are people who did not realize how close they were to success when they gave up',
+        quote: 'Many of lifes failures are people who did not realize how close they were to success when they gave up',
         author: 'Thomas A. Edison',
     },
     {
@@ -35,7 +35,7 @@ const quotes: Quotes[] = [
     },
     {
         id: 5,
-        quote: 'Life is what happens when you’re busy making other plans.',
+        quote: 'Life is what happens when youre busy making other plans.',
         author: 'John Lennon'
     },
     {
@@ -64,6 +64,28 @@ app.use(cors({
 
 app.get('/quotes', (req, res) => {
     res.send(quotes)
+});
+
+
+app.get('/quotes/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const match = quotes.find(quote => quote.id === id);
+    if (match) {
+        res.send(quotes)
+    } else {
+        res.status(404).send({ error: 'Quote not found.' });
+    }
+});
+
+
+app.get('/quotes/:author', (req, res) => {
+    const author = req.params.author;
+    const match = quotes.find(quote => quote.author === author);
+    if (match) {
+        res.send(quotes)
+    } else {
+        res.status(404).send({ error: 'author not found.' });
+    }
 });
 
 
