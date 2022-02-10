@@ -1,20 +1,11 @@
 import express from "express";
-
 import { quotes } from "./db";
+import cors from 'cors';
 
 const app = express();
 const PORT = 4000;
 
 
-
-// type Quotes = {
-//     id: number;
-//     quote: string;
-//     author: string;
-// }
-
-
-const cors = require('cors');
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
