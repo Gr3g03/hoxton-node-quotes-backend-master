@@ -15,6 +15,7 @@ app.get('/quotes', (req, res) => {
 });
 
 
+// filtering by ID Number
 app.get('/quotes/:id', (req, res) => {
     const id = Number(req.params.id);
     const match = quotes.find((quote) => quote.id === id);
@@ -26,16 +27,27 @@ app.get('/quotes/:id', (req, res) => {
 });
 
 
-
-app.get('/quotes/:author', (req, res) => {
-    const author = Number(req.params.author);
-    const match = quotes.find((quote) => quote.id === author);
+// filtering by author
+app.get('/quotes/:authorId', (req, res) => {
+    const authorId = Number(req.params.authorId);
+    const match = quotes.find((quote) => quote.id === authorId);
     if (match) {
         res.send(match);
     } else {
         res.status(404).send({ error: 'author not found.' });
     }
 });
+
+
+
+
+// pushing data to quotes
+app.post('quotes', (req, res) => {
+    const incomingQuotes = req.body
+
+    quotes.push(incomingQuotes)
+    res.json(quotes)
+})
 
 
 app.listen(PORT, () => {

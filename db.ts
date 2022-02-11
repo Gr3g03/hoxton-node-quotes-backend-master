@@ -14,7 +14,7 @@ export const quotes: Quotes[] = [
     {
         id: 2,
         quote: 'Make memes, not war!',
-        author: 'Mark Twain',
+        author: 'Mark',
     },
     {
         id: 3,
