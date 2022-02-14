@@ -1,8 +1,6 @@
 import express from "express";
 import { quotes } from "./db";
 import cors from 'cors';
-import { request } from "express";
-
 import { Quotes } from "./db";
 
 const app = express();
@@ -43,7 +41,7 @@ app.get('/quotes/:id', (req, res) => {
 
 
 
-
+//  pushing new data to quotes
 app.post('/quotes', (req, res) => {
     const firstName = req.body.firstName;
     const img = req.body.img;
@@ -73,7 +71,7 @@ app.post('/quotes', (req, res) => {
 
 
     if (errors.length === 0) {
-        // all good here
+
         const newQuote: Quotes = {
             id: Math.random(),
             firstName: firstName,
@@ -87,69 +85,12 @@ app.post('/quotes', (req, res) => {
 
         };
 
-        // add dog to our dogs array
-        // (like a memory db, this is forgotten when node restarts)
         quotes.push(newQuote);
         res.status(201).send(newQuote);
     } else {
-        // bad stuff happened
         res.status(400).send({ errors: errors });
     }
 });
-
-
-// pushing data to quotes
-// app.post('quotes', (req, res) => {
-//     const lastQuoteId = Math.max(...quotes.map((nQuote => nQuote.id)))
-//     const newId = lastQuoteId + 1
-
-//     const firstName = req.body.firstName;
-//     const lastName = req.body.lastName;
-//     const quote = req.body.quote;
-//     const img = req.body.img;
-//     const author = req.body.author;
-//     const age = req.body.age;
-
-
-//     const errors = [];
-
-//     if (typeof firstName !== 'string') {
-//         errors.push('Name missing or wrong data format')
-//     }
-//     if (typeof lastName !== 'string') {
-//         errors.push('lastname missing or wrong data format')
-//     }
-//     if (typeof author !== 'string') {
-//         errors.push('author missing or wrong data format')
-//     }
-//     if (typeof img !== 'string') {
-//         errors.push('image missing or wrong data format')
-//     }
-//     if (typeof quote !== 'string') {
-//         errors.push('quote missing or wrong data format')
-//     }
-
-//     if (typeof age !== 'string') {
-//         errors.push('age missing or wrong data format')
-//     }
-
-//     if (errors.length === 0) {
-//         const newQuote: Quotes = {
-//             id: newId,
-//             quote: quote,
-//             author: author,
-//             age: age,
-//             firstName: firstName,
-//             lastName: lastName,
-//             img: img,
-//         };
-
-//         quotes.push(newQuote)
-//         res.status(201).send(newQuote)
-//     } else {
-//         res.status(400).send({ errors: errors })
-//     }
-// });
 
 
 app.listen(PORT, () => {
