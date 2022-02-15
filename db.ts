@@ -9,7 +9,7 @@ export type Quotes = {
 }
 
 
-export const quotes: Quotes[] = [
+export let quotes: Quotes[] = [
     {
         id: 1,
         quote: 'Many of lifes failures are people who did not realize how close they were to success when they gave up',
