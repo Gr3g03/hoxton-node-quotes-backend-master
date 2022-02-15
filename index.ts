@@ -43,28 +43,28 @@ app.get('/quotes/:id', (req, res) => {
 
 //  pushing new data to quotes
 app.post('/quotes', (req, res) => {
-    const firstName = req.body.firstName;
-    const img = req.body.img;
-    const lastName = req.body.lastName;
     const quote = req.body.quote;
     const author = req.body.author;
     const age = req.body.age;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const img = req.body.img;
 
 
     const errors = [];
 
-    if (typeof firstName !== 'string') {
-        errors.push('Name missing or wrong data format')
-    }
-    if (typeof lastName !== 'string') {
-        errors.push('lastname missing or wrong data format')
-    }
+    // if (typeof firstName !== 'string') {
+    //     errors.push('Name missing or wrong data format')
+    // }
+    // if (typeof lastName !== 'string') {
+    //     errors.push('lastname missing or wrong data format')
+    // }
     if (typeof author !== 'string') {
         errors.push('author missing or wrong data format')
     }
-    if (typeof img !== 'string') {
-        errors.push('image missing or wrong data format')
-    }
+    // if (typeof img !== 'string') {
+    //     errors.push('image missing or wrong data format')
+    // }
     if (typeof quote !== 'string') {
         errors.push('quote missing or wrong data format')
     }
@@ -74,15 +74,12 @@ app.post('/quotes', (req, res) => {
 
         const newQuote: Quotes = {
             id: Math.random(),
-            firstName: firstName,
-            img: img,
-            lastName: lastName,
             quote: quote,
             author: author,
-            age: age
-
-
-
+            age: age,
+            firstName: firstName,
+            lastName: lastName,
+            img: img
         };
 
         quotes.push(newQuote);
