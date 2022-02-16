@@ -79,16 +79,16 @@ router.get('/', (req, res) => {
 })
 
 
-// // filtering by ID Number
-// router.get('/quotes/:id', (req, res) => {
-//     const id = Number(req.params.id);
-//     const match = quotes.find((quote) => quote.id === id);
-//     if (match) {
-//         res.send(match);
-//     } else {
-//         res.status(404).send({ error: 'quote not found.' });
-//     }
-// });
+// filtering by ID Number
+router.get('/quotes/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const match = quotes.find((quote) => quote.id === id);
+    if (match) {
+        res.send(match);
+    } else {
+        res.status(404).send({ error: 'quote not found.' });
+    }
+});
 
 
 
