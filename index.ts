@@ -1,7 +1,7 @@
 import express from "express";
 // import { quotes } from "./db";
 import cors from 'cors';
-import { Quotes } from "./db";
+import { Quotes } from "./quotes";
 
 const app = express();
 const PORT = 4000;
@@ -9,10 +9,20 @@ app.use(express.json());
 app.use(cors());
 
 
-let quotes: Quotes[] = [
+export type author = {
+    id: number;
+    author: string;
+    age: number;
+    firstName: string;
+    lastName: string;
+    img: string;
+}
+
+
+
+let authors: author[] = [
     {
-        id: 1,
-        quote: 'Many of lifes failures are people who did not realize how close they were to success when they gave up',
+        id: Math.random(),
         author: 'Thomas  Edison',
         age: 50,
         firstName: 'Thomas',
@@ -20,17 +30,16 @@ let quotes: Quotes[] = [
         img: 'https://compote.slate.com/images/3a53f815-fac0-4a76-9f80-f513178caffc.jpg%22',
     },
     {
-        id: 2,
-        quote: 'Make memes, not war!',
+        id: Math.random(),
         author: 'Mark',
         age: 50,
         firstName: 'Mark',
         lastName: 'Mark',
         img: 'https://www.theparisreview.org/blog/wp-content/uploads/2017/11/audiobook-mark-twain-01-lamano-studio-photography-animation-cgi-character-design-craft-illustration-post-production-1-e1510775155945.jpg',
+
     },
     {
-        id: 3,
-        quote: 'Stop making quotes I never said!',
+        id: Math.random(),
         author: 'Albert Einstein',
         age: 50,
         firstName: 'Albert',
@@ -38,8 +47,7 @@ let quotes: Quotes[] = [
         img: 'https://parade.com/wp-content/uploads/2021/08/albert-einstein-quotes.jpg',
     },
     {
-        id: 4,
-        quote: 'The purpose of our lives is to be happy.',
+        id: Math.random(),
         author: 'Dalai Lama',
         age: 50,
         firstName: 'Dalai',
@@ -47,8 +55,7 @@ let quotes: Quotes[] = [
         img: 'https://images-cdn.9gag.com/photo/10706_700b.jpg',
     },
     {
-        id: 5,
-        quote: 'Life is what happens when youre busy making other plans.',
+        id: Math.random(),
         author: 'John Lennon',
         age: 50,
         firstName: 'John',
@@ -56,8 +63,7 @@ let quotes: Quotes[] = [
         img: 'https://www.thatericalper.com/wp-content/uploads/2015/03/John-Lennons-Funny-Faces-1966-1.jpg',
     },
     {
-        id: 6,
-        quote: 'Get busy living or get busy dying.',
+        id: Math.random(),
         author: 'Stephen King',
         age: 50,
         firstName: 'Stephen',
@@ -65,8 +71,7 @@ let quotes: Quotes[] = [
         img: 'https://imgix.ranker.com/list_img_v2/65/2860065/original/2860065',
     },
     {
-        id: 7,
-        quote: 'You only live once, but if you do it right, once is enough.',
+        id: Math.random(),
         author: 'Mae West',
         age: 50,
         firstName: 'Mae',
@@ -74,32 +79,99 @@ let quotes: Quotes[] = [
         img: 'https://lwlies.com/wp-content/uploads/2019/08/mae-west-sex.jpg',
     },
     {
-        id: 8,
-        quote: 'Never let the fear of striking out keep you from playing the game',
+        id: Math.random(),
         author: 'Babe Ruth',
         age: 50,
         firstName: 'Babe',
         lastName: 'Ruth',
         img: 'https://www.morningjournal.com/wp-content/uploads/2021/08/MJE-L-BABE-RUTH-BUSTER-0813-03.jpeg',
+    }
+]
+
+
+
+let quotes: Quotes[] = [
+    {
+        id: Math.random(),
+        quote: 'Many of lifes failures are people who did not realize how close they were to success when they gave up',
+        authorId: authors[0].id
+    },
+    {
+        id: Math.random(),
+        quote: 'Make memes, not war!',
+        authorId: authors[1].id
+
+    },
+    {
+        id: Math.random(),
+        quote: 'Stop making quotes I never said!',
+        authorId: authors[2].id
+
+    },
+    {
+        id: Math.random(),
+        quote: 'The purpose of our lives is to be happy.',
+        authorId: authors[3].id
+
+    },
+    {
+        id: Math.random(),
+        quote: 'Life is what happens when youre busy making other plans.',
+        authorId: authors[4].id
+
+    },
+
+    {
+        id: Math.random(),
+        quote: 'Get busy living or get busy dying.',
+        authorId: authors[5].id
+
+
+    },
+    {
+        id: Math.random(),
+        quote: 'You only live once, but if you do it right, once is enough.',
+        authorId: authors[6].id
+
+
+    },
+    {
+        id: Math.random(),
+        quote: 'Never let the fear of striking out keep you from playing the game',
+        authorId: authors[7].id
+
+
     },
 
 ];
 
 
+
 // filtering by author or display all quotes
+// app.get('/quotes', (req, res) => {
+//     const search = req.query.search;
+
+//     let match = quotes
+
+//     if (typeof search === 'string') {
+
+//         match = match.filter((quote) => quote.quote.toUpperCase().includes(search.toUpperCase())
+//         );
+//     }
+
+//     res.send(match)
+// });
+
+
 app.get('/quotes', (req, res) => {
-    const search = req.query.search;
+    let copyQuotes = JSON.parse(JSON.stringify(quotes))
 
-    let match = quotes
-
-    if (typeof search === 'string') {
-
-        match = match.filter((quote) => quote.author.toUpperCase().includes(search.toUpperCase())
-        );
+    for (const quote of copyQuotes) {
+        const author = authors.find(author => author.id === quote.authorId)
+        quote.author = author
     }
-
-    res.send(match)
-});
+    res.send(copyQuotes)
+})
 
 
 
@@ -145,17 +217,17 @@ app.post('/quotes', (req, res) => {
         errors.push('quote missing or wrong data format')
     }
 
-
     if (errors.length === 0) {
 
         const newQuote: Quotes = {
             id: Math.random(),
             quote: quote,
-            author: author,
-            age: age,
-            firstName: firstName,
-            lastName: lastName,
-            img: img
+            authorId: author
+            // author: author,
+            // age: age,
+            // firstName: firstName,
+            // lastName: lastName,
+            // img: img
         };
 
         quotes.push(newQuote);
@@ -178,11 +250,12 @@ app.patch('/quotes/:id', (req, res) => {
 
     if (quoteToChange) {
         if (typeof req.body.quote === 'string') quoteToChange.quote = req.body.quote
-        if (typeof req.body.age === 'number') quoteToChange.age = req.body.age
-        if (typeof req.body.author === 'string') quoteToChange.author = req.body.author
-        if (typeof req.body.firstName === 'string') quoteToChange.firstName = req.body.firstName
-        if (typeof req.body.img === 'string') quoteToChange.img = req.body.img
-        if (typeof req.body.lastName === 'string') quoteToChange.lastName = req.body.lastName
+        if (typeof req.body.authorId === 'string') quoteToChange.quote = req.body.quote
+        // if (typeof req.body.age === 'number') quoteToChange.age = req.body.age
+        // if (typeof req.body.author === 'string') quoteToChange.author = req.body.author
+        // if (typeof req.body.firstName === 'string') quoteToChange.firstName = req.body.firstName
+        // if (typeof req.body.img === 'string') quoteToChange.img = req.body.img
+        // if (typeof req.body.lastName === 'string') quoteToChange.lastName = req.body.lastName
         res.send(quoteToChange)
     } else {
         res.status(404).send({ error: 'quote not found.' });
@@ -204,10 +277,6 @@ app.delete('/quotes/:id', (req, res) => {
         res.status(404).send({ error: ' quote not found' })
     }
 })
-
-
-
-
 
 
 app.listen(PORT, () => {
