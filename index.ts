@@ -120,6 +120,16 @@ SELECT * FROM quotes;
 `)
 
 
+const getQuoteById = db.prepare(` 
+SELECT * FROM quotes 
+WHERE id=?;
+`)
+
+
+const createNewQuote = db.prepare(`
+INSERT INTO quotes (quote, author, firstName, lastName, age, image) VALUES (?, ?, ?, ?, ?,?);
+`)
+
 
 app.get('/quotes', (req, res) => {
     const allQuotes = getAllQuotes.all()
@@ -129,44 +139,83 @@ app.get('/quotes', (req, res) => {
 
 
 // filtering by ID Number
-// app.get('/quotes/:id', (req, res) => {
-//     const id = Number(req.params.id);
-//     const match = quotes.find((quote) => quote.id === id);
-//     if (match) {
-//         res.send(match);
-//     } else {
-//         res.status(404).send({ error: 'quote not found.' });
-//     }
-// });
+app.get('/quotes/:id', (req, res) => {
+    const id = req.params.id;
+    const match = getQuoteById.get(id)
+
+    if (match) {
+        res.send(match)
+    } else {
+        res.status(404).send({ error: 'Quote not found' })
+    }
+});
 
 
 
 //  pushing new data to quotes
-// app.post('/', (req, res) => {
+app.post('/', (req, res) => {
+    const quote = req.body.quote;
+    const author = req.body.author;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const age = req.body.age;
+    const image = req.body.image;
 
-//     const errors = [];
+    const errors = [];
 
-//     if (typeof req.body.authorId !== 'number') {
-//         errors.push('authorId missing or wrong data format')
-//     }
 
-//     if (typeof req.body.quote !== 'string') {
-//         errors.push('quote missing or wrong data format')
-//     }
+    if (errors.length !== 0) {
+        if (typeof quote !== 'string') {
+            errors.push('Worng data format')
+        }
+    }
 
-//     if (errors.length === 0) {
-//         const quote: Quotes = {
-//             quote: req.body.quote,
-//             authorId: req.body.authorId
-//         }
+    if (errors.length !== 0) {
+        if (typeof author !== 'string') {
+            errors.push('Worng data format')
+        }
+    }
 
-//         quotes = [...quotes, quote]
+    if (errors.length !== 0) {
+        if (typeof firstName !== 'string') {
+            errors.push('Worng data format')
+        }
+    }
 
-//         res.send(quote)
-//     } else {
-//         res.status(400).send({ errors: errors });
-//     }
-// });
+    if (errors.length !== 0) {
+        if (typeof lastName !== 'string') {
+            errors.push('Worng data format')
+        }
+    }
+
+    if (errors.length !== 0) {
+        if (typeof age !== 'number') {
+            errors.push('Worng data format')
+        }
+    }
+
+    if (errors.length !== 0) {
+        if (typeof image !== 'string') {
+            errors.push('Worng data format')
+        }
+    }
+
+    if (errors.length === 0) {
+        const result = createNewQuote.run(
+            createNewQuote.run(quote),
+            createNewQuote.run(author),
+            createNewQuote.run(firstName),
+            createNewQuote.run(lastName),
+            createNewQuote.run(age),
+            createNewQuote.run(image)
+        )
+
+        const newQuote = getQuoteById.get.(result.lastInsertRowid);
+        res.send(result)
+    } else {
+        res.status(404).send({ errors: errors })
+    }
+});
 
 
 // patch 
