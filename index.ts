@@ -36,7 +36,7 @@ const createQuote = db.prepare(`
         firstName TEXT NOT NULL,
         lastName TEXT NOT NULL,
         age INTEGER NOT NULL,
-        image TEXT NOT NULL,
+        image TEXT  NOT NULL,
         PRIMARY KEY (id)
     );
 `)
@@ -106,7 +106,7 @@ const quotess = [
 ];
 
 const insertIntoQuotes = db.prepare(` 
-INSERT INTO quotes (quote, author, firstName, lastName, age, image) VALUES (?, ?, ?, ?, ?,?);
+INSERT INTO quotes (quote, author, firstName, lastName, age, image) VALUES (?, ?, ?, ?, ?, ?);
 `)
 
 for (const addquote of quotess) {
@@ -127,7 +127,7 @@ WHERE id=?;
 
 
 const createNewQuote = db.prepare(`
-INSERT INTO quotes (quote, author, firstName, lastName, age, image) VALUES (?, ?, ?, ?, ?,?);
+INSERT INTO quotes (quote, author, firstName, lastName, age, image) VALUES (?, ?, ?, ?, ?, ?);
 `)
 
 
@@ -153,7 +153,7 @@ app.get('/quotes/:id', (req, res) => {
 
 
 //  pushing new data to quotes
-app.post('/', (req, res) => {
+app.post('/quotes', (req, res) => {
     const quote = req.body.quote;
     const author = req.body.author;
     const firstName = req.body.firstName;
@@ -202,16 +202,16 @@ app.post('/', (req, res) => {
 
     if (errors.length === 0) {
         const result = createNewQuote.run(
-            createNewQuote.run(quote),
-            createNewQuote.run(author),
-            createNewQuote.run(firstName),
-            createNewQuote.run(lastName),
-            createNewQuote.run(age),
-            createNewQuote.run(image)
+            quote,
+            author,
+            firstName,
+            lastName,
+            age,
+            image,
         )
 
-        const newQuote = getQuoteById.get.(result.lastInsertRowid);
-        res.send(result)
+        const newQuote = getQuoteById.get(result.lastInsertRowid);
+        res.send(newQuote)
     } else {
         res.status(404).send({ errors: errors })
     }
