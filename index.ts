@@ -248,7 +248,7 @@ app.patch('/quotes/:id', (req, res) => {
 });
 
 
-app.delete('quotes/:id', (req, res) => {
+app.delete('/quotes/:id', (req, res) => {
     const id = req.params.id
     const result = deleteQuote.run(id)
 
