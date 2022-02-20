@@ -130,6 +130,16 @@ const createNewQuote = db.prepare(`
 INSERT INTO quotes (quote, author, firstName, lastName, age, image) VALUES (?, ?, ?, ?, ?, ?);
 `)
 
+const updateQuotes = db.prepare(`
+UPDATE quotes  
+SET quote = ? WHERE id =?;
+`)
+
+
+const deleteQuote = db.prepare(`
+DELETE  FROM quotes WHERE id =?;
+`)
+
 
 app.get('/quotes', (req, res) => {
     const allQuotes = getAllQuotes.all()
@@ -220,39 +230,37 @@ app.post('/quotes', (req, res) => {
 
 // patch 
 
-// app.patch('/:id', (req, res) => {
-//     const id = Number(req.params.id)
-//     const { quote, authorId } = req.body
-//     // data that we will update
+app.patch('/quotes/:id', (req, res) => {
+    const id = req.params.id
+    const quote = req.body.quote;
 
-//     const quoteToChange = quotes.find((qte) => qte.id === id);
+    const result = getQuoteById.get(id)
 
-//     //check if the property exist or not 
+    if (result) {
+        updateQuotes.run(quote, id)
 
-//     if (quoteToChange) {
-//         if (typeof quote === 'string') quoteToChange.quote = quote
-//         if (typeof authorId === 'string') quoteToChange.quote = quote
-//         res.send(quoteToChange)
-//     } else {
-//         res.status(404).send({ error: 'quote not found.' });
-//     }
-// });
+        const updatedQuote = getQuoteById.get(id)
 
-
-// app.delete('/:id', (req, res) => {
-//     const id = Number(req.params.id)
-
-//     const match = quotes.find(qte => qte.id === id)
+        res.send(updatedQuote)
+    } else {
+        res.status(404).send(`Quote not found`)
+    }
+});
 
 
-//     if (match) {
+app.delete('quotes/:id', (req, res) => {
+    const id = req.params.id
+    const result = deleteQuote.run(id)
 
-//         quotes = quotes.filter(qte => qte.id !== id)
-//         res.send("quote deletet successfully")
-//     } else {
-//         res.status(404).send({ error: ' quote not found' })
-//     }
-// })
+
+    console.log('result:', result);
+
+    if (result.changes !== 0) {
+        res.send({ message: ` Quote delted Succefully` })
+    } else {
+        res.status(404).send({ error: ` quote not found` })
+    }
+})
 
 
 app.listen(PORT, () => {
