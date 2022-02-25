@@ -11,7 +11,7 @@ import Database from 'better-sqlite3';
 const app = express();
 app.use(cors());
 app.use(express.json());
-const PORT = 4000;
+// const PORT = 4000;
 
 
 const db = new Database('./data.db', {
@@ -263,6 +263,6 @@ app.delete('/quotes/:id', (req, res) => {
 })
 
 
-app.listen(PORT, () => {
-    console.log(`Server is up and running on: http://localhost:${PORT}/quotes `);
+app.listen(process.env.PORT, () => {
+    console.log(`Server is up and running on: http://localhost:${process.env.PORT}/quotes `);
 })
